@@ -45,7 +45,8 @@ public class SpawnController : MonoBehaviour
 
             if (player != null)
             {
-                player.OnPlayerDied += StopSpawning;
+               
+                player.onPlayerDied += StopSpawning;
             }
         }
     }

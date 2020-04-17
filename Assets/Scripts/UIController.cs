@@ -4,6 +4,8 @@ using UnityEngine.UI;
 
 public class UIController : MonoBehaviour
 {
+
+    [SerializeField]
     private Player playerRef;
 
     [SerializeField]
@@ -26,6 +28,17 @@ public class UIController : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
+        
+
+
+        if (playerRef != null)
+        {
+            playerRef.onPlayerDied += new Player.OnPlayerDied(OnplayerDie);
+            playerRef.onPlayerHit += new Player.OnPlayerHit(OnPlayerhitten);
+            playerRef.onPlayerScoreChanged += new Player.OnPlayerScoreChanged(OnPlayerScoreChange);
+        }
+
+
         ToggleRestartButton(false);
 
         playerRef = FindObjectOfType<Player>();
@@ -36,6 +49,41 @@ public class UIController : MonoBehaviour
         }
     }
 
+    private void OnPlayerhitten(int delta)
+    {
+
+        for (int i = 0; i < lifeImages.Length; i ++)
+        {
+            if (lifeImages[i] != null && lifeImages[i].enabled)
+            {
+                lifeImages[i].gameObject.SetActive(playerRef.Lives >= i+1);
+            }
+        }
+
+    }
+    private void OnplayerDie()
+    {
+        if (scoreLabel != null)
+            {
+                scoreLabel.text = "Game Over";
+            }
+
+
+            ToggleRestartButton(true);
+        
+    }
+
+    private void OnPlayerScoreChange(int score)
+    {
+        
+        if (scoreLabel != null)
+        {
+            scoreLabel.text = playerRef.Score.ToString();
+            
+        }
+    }
+
+
     private void ToggleRestartButton(bool val)
     {
         if (restartBtn != null)
@@ -44,31 +92,6 @@ public class UIController : MonoBehaviour
         }
     }
 
-    private void UpdateUI()
-    {
-        for (int i = 0; i < lifeImages.Length; i++)
-        {
-            if (lifeImages[i] != null && lifeImages[i].enabled)
-            {
-                lifeImages[i].gameObject.SetActive(playerRef.Lives >= i + 1);
-            }
-        }
 
-        if (scoreLabel != null)
-        {
-            scoreLabel.text = playerRef.Score.ToString();
-        }
-
-        if (playerRef.Lives <= 0)
-        {
-            CancelInvoke();
-
-            if (scoreLabel != null)
-            {
-                scoreLabel.text = "Game Over";
-            }
-
-            ToggleRestartButton(true);
-        }
-    }
+    
 }

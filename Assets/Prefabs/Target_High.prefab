@@ -105,6 +105,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6ffb1a118247af4095b52ed68ce2ead, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  upforce: 100
+  sideforce: 0.1
   maxHP: 3
   scoreAdd: 20
 --- !u!54 &54445170667756804

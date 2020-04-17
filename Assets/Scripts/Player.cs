@@ -65,11 +65,56 @@ public class Player : MonoBehaviour
 
     #endregion MovementProperties
 
-    public Action OnPlayerDied;
+    public delegate void OnPlayerDied();
+
+    public event OnPlayerDied onPlayerDied;
+
+    public delegate void OnPlayerHit(int delta);
+
+    public event OnPlayerHit onPlayerHit;
+
+    public delegate void OnPlayerScoreChanged(int score);
+
+    public event OnPlayerScoreChanged onPlayerScoreChanged;
+
+    public void ApplyDamage(int delta)
+    {
+        Lives -= delta;
+
+        if (Lives > 0)
+        {
+            if (onPlayerHit != null)
+            {
+                onPlayerHit(delta);
+            }
+        }
+        else
+        {
+            onPlayerDied();
+            if (onPlayerHit != null)
+            {
+                onPlayerHit(delta);
+            }
+
+        }
+    }
+    
+
+    public void ApplyScore(int score)
+    {
+        Score += score;
+            if (onPlayerScoreChanged != null)
+            {
+                onPlayerScoreChanged(score);
+            }
+           
+    }
 
     // Start is called before the first frame update
     private void Start()
     {
+        ApplyScore(0);
+        
         leftCameraBound = Camera.main.ViewportToWorldPoint(new Vector3(
             0F, 0F, 0F)).x + PLAYER_RADIUS;
 
